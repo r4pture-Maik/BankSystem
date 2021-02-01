@@ -1,0 +1,16 @@
+{
+  "name": "ts",
+  "version": "1.0.0",
+  "main": "Main.js",
+  "scripts": {
+    "build": "tsc -w",
+    "start": "npm run build && node ./build/Main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/express": "^4.17.11"
+  }
+}

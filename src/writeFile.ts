@@ -1,5 +1,4 @@
-var fs = require("fs")
-
-export function writeToFile(localGames:any){
-    fs.writeFileSync("../resource/bank_system.json", JSON.stringify(localGames));
+const fs = require('fs')
+export function writeToFile(localBanks:any){
+    fs.writeFileSync("../resources/bank_system.json", JSON.stringify(localBanks));
 }

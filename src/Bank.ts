@@ -1,62 +1,79 @@
 const TokenGenerator = require('uuid-token-generator');
 const tokGen = new TokenGenerator()
-import {Account,Transaction} from "./Account"
+import {Account} from "./Account"
 export class Bank{
-    private accounts: Account[] = [];
+    
     constructor(
-        private Name: string, 
-        private Address: string,
-        private Balance: number = 0,
-        private ID?: string
-        ){
-            !this.ID ? this.ID = tokGen.generate(): this.ID = ID
-        }
+        private name: string, 
+        private address: string,
+        private balance: number = 500,
+        private ID: string = tokGen.generate(),
+        private transactions:Transaction[] = [],
+        private accounts: Account[] = []
+        ){}
         
-        public getName(){
-            return this.Name
-        }
+        // public getName(){
+        //     return this.name
+        // }
 
-        public getAccount(accountName:string){
-            return this.accounts.find(singleUser => singleUser.getName() == accountName)
-        }
+        public getAccount = (accountID:string) => this.accounts.find(singleUser => singleUser.getID() === accountID)
+        
+        public getAccounts = () => this.accounts
 
-        public setAccount(Name:string,Surname:string,Balance?:number,ID?:string,transactions?:Transaction[]){
-            this.accounts.push(new Account(Name,Surname,Number(Balance),ID,transactions))
+        public addAccount(Name:string, Surname:string, Balance?:number, ID?:string ){
+            this.accounts.push(new Account(Name,Surname,Number(Balance),ID))
         }
 
         public setBalance(balance:number){
-            this.Balance = balance
+            this.balance = balance
         }
         public getBalance(){
-            return this.Balance
+            return this.balance
+        }
+        public getID(){
+            return this.ID
         }
 
-        public sendMoney(fromUser:string, toUser:string, money:number,Bank:Bank){
+        private setTransaction = (fromAccount:string, toAccount:any, type:string, amount:number) =>
+            this.transactions.push({fromAccount, type, money:amount, toAccount})
+
+        getTransaction = () => this.transactions
+
+        public sendMoney(fromUser:string, toUser:string, money:number, destinationBank:Bank){
             const from = this.getAccount(fromUser);
-            //If bank is setted will try to get user from there
-            const to = (Bank) ? (Bank.getAccount(toUser)) : (this.getAccount(toUser))
-            //If any of two is undefined return an error
+            const to = destinationBank.getAccount(toUser)
             if(from && to){
                 //Same bank
-                if(this.Name == Bank.getName()){
-                    from?.setTransaction("-",money,toUser);
-                    to?.setTransaction("+",money,fromUser)
+                if(this.ID == destinationBank.getID()){
+                    //Same bank
+                    this.setTransaction(from.getID(),to.toJson(), "-",money);
+                    destinationBank.setTransaction(to.getID(),from.toJson(),"+",money)
+                    
+                    from.setBalance(from.getBalance() - money)
+                    to.setBalance(to.getBalance() + money);
                 }else{
                     //Different bank
-                    from.setTransaction("-", money, toUser) 
-                    from.setTransaction("-", 1, Bank.getName())
-                    Bank.setBalance(Bank.getBalance() + 1)
-                    to.setTransaction("+",money,fromUser)
-                }  
-            }else return false
-                           
+                    this.setTransaction(from.getID(),to.toJson(), "-", money+1);
+                    destinationBank.setTransaction(to.getID(),from.toJson(),"+",money)
+                    
+                    this.setBalance(this.getBalance() + 1)
+                    from.setBalance(from.getBalance() - (money+1))
+                    to.setBalance(to.getBalance() + money);
+                } 
+            } else return false                    
         }
 
         toString(){
-            return "Name: " + this.Name,
-                    "Adress: " + this.Address,
-                    "Balance" + this.Balance,
+            return "Name: " + this.name,
+                    "Adress: " + this.address,
+                    "Balance" + this.balance,
                     "ID:" + this.ID
         }
-
 }
+
+export type Transaction = { 
+    fromAccount:string
+    type:string
+    money:number
+    toAccount:any
+ } 

@@ -12,10 +12,6 @@ export class Bank{
         private accounts: Account[] = []
         ){}
         
-        // public getName(){
-        //     return this.name
-        // }
-
         public getAccount = (accountID:string) => this.accounts.find(singleUser => singleUser.getID() === accountID)
         
         public getAccounts = () => this.accounts
@@ -34,30 +30,27 @@ export class Bank{
             return this.ID
         }
 
-        private setTransaction = (fromAccount:string, toAccount:any, type:string, amount:number) =>
-            this.transactions.push({fromAccount, type, money:amount, toAccount})
+        private setTransaction = (fromAccount:string, toAccount:string, type:string, money:number) =>
+            this.transactions.push({fromAccount, toAccount, type, money})
 
-        getTransaction = () => this.transactions
+        getTransactions = () => this.transactions
 
         public sendMoney(fromUser:string, toUser:string, money:number, destinationBank:Bank){
             const from = this.getAccount(fromUser);
             const to = destinationBank.getAccount(toUser)
             if(from && to){
-                //Same bank
                 if(this.ID == destinationBank.getID()){
                     //Same bank
-                    this.setTransaction(from.getID(),to.toJson(), "-",money);
-                    destinationBank.setTransaction(to.getID(),from.toJson(),"+",money)
-                    
-                    from.setBalance(from.getBalance() - money)
+                    this.setTransaction(from.getID(), to.getID(), "-", money);
+                    destinationBank.setTransaction(from.getID(), to.getID(), "+", money);
+                    from.setBalance(from.getBalance() - money);
                     to.setBalance(to.getBalance() + money);
                 }else{
                     //Different bank
-                    this.setTransaction(from.getID(),to.toJson(), "-", money+1);
-                    destinationBank.setTransaction(to.getID(),from.toJson(),"+",money)
-                    
-                    this.setBalance(this.getBalance() + 1)
-                    from.setBalance(from.getBalance() - (money+1))
+                    this.setTransaction(from.getID(), to.getID(),"-", money + 1);
+                    destinationBank.setTransaction(from.getID(), to.getID(), "+", money);
+                    this.setBalance(this.getBalance() + 1);
+                    from.setBalance(from.getBalance() - (money+1));
                     to.setBalance(to.getBalance() + money);
                 } 
             } else return false                    
@@ -73,7 +66,7 @@ export class Bank{
 
 export type Transaction = { 
     fromAccount:string
+    toAccount:string
     type:string
     money:number
-    toAccount:any
  } 

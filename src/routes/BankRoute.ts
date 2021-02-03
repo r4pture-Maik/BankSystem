@@ -11,7 +11,6 @@ router.use(bodyParser.urlencoded({ extended: true }));
 
 
 router.get("/", (_: Request, res: Response) => {
-  console.log("oloregast");
   const bankHandler = new BankSystem();
   res.status(200).json(bankHandler.getBanks());
 });
@@ -50,8 +49,8 @@ router.post(
   ({ body: { fromID, toID, money } }: Request, res: Response) => {
     const bankHandler = new BankSystem();
     if (bankHandler.moneyHandler(fromID, toID, money) === false) {
-      res.status(400).json({ Error: "" });
-    } else res.status(200).json({ Success: "" });
+      res.status(400).json({ Error: "Could not find user" });
+    } else res.status(200).json({ Success: "Money sent" });
   }
 );
 
@@ -79,7 +78,7 @@ router.post(
     const bankHandler = new BankSystem();
     if (bankHandler.addAccount(bankID, name, surname)) {
       res.status(200).json({ Success: "User added" });
-    } else res.status(404).json({ Error: "Error bank not found" });
+    } else res.status(404).json({ Error: "Bank not found" });
   }
 );
 

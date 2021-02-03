@@ -26,7 +26,7 @@ export class BankSystem{
     }
 
     private bankFiller = () => {
-        const data = JSON.parse(fs.readFileSync("../resources/bank_system.json","utf-8"));
+        const data = JSON.parse(fs.readFileSync("../resources/bank_system.json", "utf-8"));
 
         this.banks = data.map((currentValue:any) =>{
             const {name,address,balance,ID, accounts, transactions} = currentValue
@@ -47,8 +47,8 @@ export class BankSystem{
         const fromUserBank = this.banks.find(singleBank => singleBank.getAccount(fromUser))
         const toUserBank = this.banks.find(singleBank => singleBank.getAccount(toUser))
         if(fromUserBank && toUserBank){
-            fromUserBank.sendMoney(fromUser,toUser,moneyToSend,toUserBank);;
-            writeToFile(this.banks)
+            fromUserBank.sendMoney(fromUser,toUser,moneyToSend,toUserBank);
+            writeToFile(this.banks);
         }else{
             return false
         }

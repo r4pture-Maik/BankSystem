@@ -17,6 +17,5 @@ export class Account{
 
     setBalance = (amount:number) => this.balance = amount;
     
-    toJson = () => {this.name, this.surname, this.balance, this.ID}
 }
 

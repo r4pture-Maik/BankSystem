@@ -2,14 +2,16 @@
     {
         "name": "Bank 1",
         "address": "Address 1, 2",
-        "balance": 6,
+        "balance": 0,
         "ID": "IDbank1",
-        "transactions": [],
+        "transactions": [
+   
+        ],
         "accounts": [
             {
                 "name": "user1Bank1",
                 "surname": "user1Bank1",
-                "balance": 416,
+                "balance": 1000,
                 "ID": "IDbank1user1"
             },
             {
@@ -23,35 +25,16 @@
     {
         "name": "Bank 2",
         "address": "Address 2, 1",
-        "balance": 19,
+        "balance": 0,
         "ID": "IDbank2",
         "transactions": [
-            {
-                "fromAccount": "IDbank2user1",
-                "type": "+",
-                "money": 20
-            },
-            {
-                "fromAccount": "IDbank2user1",
-                "type": "+",
-                "money": 20
-            },
-            {
-                "fromAccount": "IDbank2user1",
-                "type": "+",
-                "money": 20
-            },
-            {
-                "fromAccount": "IDbank2user1",
-                "type": "+",
-                "money": 20
-            }
+ 
         ],
         "accounts": [
             {
                 "name": "user1Bank2",
                 "surname": "user1Bank2",
-                "balance": 580,
+                "balance": 500,
                 "ID": "IDbank2user1"
             }
         ]

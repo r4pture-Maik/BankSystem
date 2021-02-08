@@ -1,12 +1,18 @@
 const TokenGenerator = require('uuid-token-generator');
 const tokGen = new TokenGenerator()
-export class Account{
+export interface IAccount{
+    name: string, 
+    surname: string,
+    balance: number,
+    ID: string
+}
+export class Account implements IAccount{
 
     constructor(
-        private name: string, 
-        private surname: string,
-        private balance: number = 500,
-        private ID: string = tokGen.generate(),      
+        public name: string, 
+        public surname: string,
+        public balance: number = 500,
+        public ID: string = tokGen.generate(),      
         ){}
 
     getName = ():string => this.name
@@ -18,4 +24,6 @@ export class Account{
     setBalance = (amount:number) => this.balance = amount;
     
 }
+
+
 

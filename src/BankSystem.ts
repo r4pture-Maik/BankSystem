@@ -1,7 +1,7 @@
 var fs = require('fs');
 import { writeToFile } from "./writeFile";
 import { Bank } from "./Bank";
-import { Account } from "./Account";
+import { Account, IAccount } from "./Account";
 
 export class BankSystem{
     constructor(
@@ -20,7 +20,7 @@ export class BankSystem{
     addAccount = (bankID:string,name:string,surname:string) => { 
         const singleBank = this.getBank(bankID)
         if(singleBank){
-            singleBank?.addAccount(name,surname)
+            singleBank.addAccount(name,surname)
             writeToFile(this.banks) 
         }else return false      
     }
@@ -36,21 +36,20 @@ export class BankSystem{
                 balance,
                 ID,
                 transactions,
-                accounts.map((currentUser:any)=>{
-                    const {name, surname, balance, ID} = currentUser
-                    return new Account(name,surname,balance,ID)
-            }))
+                accounts.map(({name, surname, balance, ID}:IAccount)=> new Account(name,surname,balance,ID)
+            ))
         })  
     }
 
     public moneyHandler = (fromUser:string,toUser:string,moneyToSend:number) => {
         const fromUserBank = this.banks.find(singleBank => singleBank.getAccount(fromUser))
         const toUserBank = this.banks.find(singleBank => singleBank.getAccount(toUser))
-        if(fromUserBank && toUserBank){
-            fromUserBank.sendMoney(fromUser,toUser,moneyToSend,toUserBank);
-            writeToFile(this.banks);
-        }else{
-            return false
-        }
+        // if(fromUserBank && toUserBank){
+        //     fromUserBank.sendMoney(fromUser,toUser,moneyToSend,toUserBank);
+        //     writeToFile(this.banks);
+        // }else{
+        //     return false
+        // }
+       return fromUserBank && toUserBank && fromUserBank.sendMoney(fromUser,toUser,moneyToSend,toUserBank) && writeToFile(this.banks);
     }
 }

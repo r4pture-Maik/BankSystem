@@ -16,8 +16,8 @@ export class Bank{
         
         public getAccounts = () => this.accounts
 
-        public addAccount(Name:string, Surname:string, Balance?:number, ID?:string ){
-            this.accounts.push(new Account(Name,Surname,Number(Balance),ID))
+        public addAccount(name:string, surname:string, balance?:number, id?:string ){
+            this.accounts.push(new Account(name,surname,Number(balance),id))
         }
 
         public setBalance(balance:number){
@@ -39,21 +39,15 @@ export class Bank{
             const from = this.getAccount(fromUser);
             const to = destinationBank.getAccount(toUser)
             if(from && to){
-                if(this.ID == destinationBank.getID()){
-                    //Same bank
-                    this.setTransaction(from.getID(), to.getID(), "-", money);
-                    destinationBank.setTransaction(from.getID(), to.getID(), "+", money);
-                    from.setBalance(from.getBalance() - money);
-                    to.setBalance(to.getBalance() + money);
-                }else{
-                    //Different bank
-                    this.setTransaction(from.getID(), to.getID(),"-", money + 1);
-                    destinationBank.setTransaction(from.getID(), to.getID(), "+", money);
-                    this.setBalance(this.getBalance() + 1);
-                    from.setBalance(from.getBalance() - (money+1));
-                    to.setBalance(to.getBalance() + money);
-                } 
-            } else return false                    
+                const isTheSameBank = this.ID == destinationBank.getID();
+                this.setTransaction(from.getID(), to.getID(), "-", money + (isTheSameBank ? 0 : 1));
+                destinationBank.setTransaction(from.getID(), to.getID(), "+", money);
+                from.setBalance(from.getBalance() - money + (isTheSameBank ? 0 : 1));
+                to.setBalance(to.getBalance() + money);
+                !isTheSameBank && this.setBalance(this.getBalance() + 1);
+                return true
+                //if(!isTheSameBank) this.setBalance(this.getBalance() + 1);
+            } else return false         
         }
 
         toString(){

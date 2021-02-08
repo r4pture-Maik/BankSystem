@@ -28,13 +28,8 @@ router.get(
       ?.getTransaction()
       .filter((item: Transaction) => item.fromAccount === userID);
     if (transactionList) {
-      res.status(200).json({
-        Success: transactionList,
-      });
-    } else {
-      res.status(404).json({
-        Error: "User not found",
-      });
+      res.status(200).json( transactionList );
+    } else { res.status(404).json({ Error: "User not found" });
     }
   }
 );
@@ -49,7 +44,7 @@ router.post(
   ({ body: { fromID, toID, money } }: Request, res: Response) => {
     const bankHandler = new BankSystem();
     if (bankHandler.moneyHandler(fromID, toID, money) === false) {
-      res.status(400).json({ Error: "Could not find user" });
+      res.status(404).json({ Error: "Could not find user" });
     } else res.status(200).json({ Success: "Money sent" });
   }
 );
